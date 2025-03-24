@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Mess Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🍽 Hostel Mess Booking 🍽</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">🏠 Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="booking-form">
+        <h2>📅 Book Your Meal</h2>
+        <p>Welcome, <span id="userRegNo"></span>! 🎉</p>
+
+        <label for="bookingDate">Select Date:</label>
+        <input type="date" id="bookingDate">
+
+        <label for="meal">Select Meal:</label>
+        <select id="meal">
+            <option value="Breakfast">🥞 Breakfast</option>
+            <option value="Lunch">🍛 Lunch</option>
+            <option value="Dinner">🍽 Dinner</option>
+        </select>
+
+        <h3>🍽 Today's Menu</h3>
+        <ul id="foodMenu"><li>Loading...</li></ul>
+
+        <h3>⏰ Dining Time:</h3>
+        <p id="diningTime">Select a meal to view dining time</p>
+
+        <h3>⏳ Booking Closes In:</h3>
+        <p id="countdown">Checking...</p>
+
+        <button id="bookMeal">✅ Book Now</button>
+
+        <h3>📜 Your Booked Meals:</h3>
+        <ul id="bookingHistory"></ul>
+
+        <button id="cancelMeal" style="display: none;">❌ Cancel Selected Meals</button>
+    </section>
+
+    <script>
+        let regNo = sessionStorage.getItem("regNo");
+        if (regNo) {
+            document.getElementById("userRegNo").innerText = regNo;
+        } else {
+            window.location.href = "index.html";
+        }
+
+        const mealTimings = {
+            "Breakfast": { time: "7:30 AM - 9:00 AM", close: "05:00" },
+            "Lunch": { time: "12:30 PM - 2:00 PM", close: "10:00" },
+            "Dinner": { time: "7:30 PM - 9:00 PM", close: "17:00" }
+        };
+
+        const weeklyMenu = {
+            0: { "Breakfast": "Pancakes & Juice", "Lunch": "Rice & Dal", "Dinner": "Chapati & Sabzi" },
+            1: { "Breakfast": "Idli & Sambar", "Lunch": "Rajma & Rice", "Dinner": "Paratha & Curd" },
+            2: { "Breakfast": "Poha & Tea", "Lunch": "Aloo Gobi & Rice", "Dinner": "Paneer Butter Masala & Roti" },
+            3: { "Breakfast": "Bread Butter & Coffee", "Lunch": "Chole Bhature", "Dinner": "Dosa & Chutney" },
+            4: { "Breakfast": "Dhokla & Chutney", "Lunch": "Veg Pulao & Raita", "Dinner": "Dal Tadka & Rice" },
+            5: { "Breakfast": "Upma & Coconut Chutney", "Lunch": "Sambar Rice", "Dinner": "Veg Biryani & Raita" },
+            6: { "Breakfast": "Cornflakes & Milk", "Lunch": "Mix Veg Curry & Rice", "Dinner": "Gobi Manchurian & Fried Rice" }
+        };
+
+        let bookedMeals = JSON.parse(localStorage.getItem("bookedMeals")) || {};
+
+        function updateMenu() {
+            let selectedDate = document.getElementById("bookingDate").value;
+            if (!selectedDate) return;
+
+            let day = new Date(selectedDate).getDay();
+            let meal = document.getElementById("meal").value;
+            document.getElementById("foodMenu").innerHTML = `<li>${weeklyMenu[day][meal]}</li>`;
+
+            updateDiningTime();
+            updateCountdown();
+            updateBookingHistory();
+        }
+
+        function updateDiningTime() {
+            let meal = document.getElementById("meal").value;
+            document.getElementById("diningTime").innerText = `🕒 ${mealTimings[meal].time}`;
+        }
+
+        function updateCountdown() {
+            let meal = document.getElementById("meal").value;
+            let selectedDate = document.getElementById("bookingDate").value;
+            if (!selectedDate) return;
+
+            let deadline = new Date(selectedDate);
+            let closeTime = mealTimings[meal].close.split(":");
+            deadline.setHours(parseInt(closeTime[0]), parseInt(closeTime[1]), 0);
+
+            let bookingCloseTime = new Date(deadline.getTime() - 2.5 * 60 * 60 * 1000);
+            let now = new Date();
+
+            let countdownElement = document.getElementById("countdown");
+            let bookButton = document.getElementById("bookMeal");
+
+            if (now >= bookingCloseTime) {
+                countdownElement.innerHTML = "🚫 Booking Closed!";
+                bookButton.disabled = true;
+                bookButton.style.background = "#ccc";
+            } else {
+                let hours = Math.floor((bookingCloseTime - now) / (1000 * 60 * 60));
+                let minutes = Math.floor(((bookingCloseTime - now) % (1000 * 60 * 60)) / (1000 * 60));
+                countdownElement.innerHTML = `🕒 ${hours}h ${minutes}m left`;
+                bookButton.disabled = false;
+            }
+        }
+
+        function updateBookingHistory() {
+            let historyElement = document.getElementById("bookingHistory");
+            historyElement.innerHTML = "";
+
+            let selectedDate = document.getElementById("bookingDate").value;
+            if (selectedDate && bookedMeals[selectedDate] && Array.isArray(bookedMeals[selectedDate])) {
+                bookedMeals[selectedDate].forEach(meal => {
+                    historyElement.innerHTML += `
+                        <li>
+                            <input type="checkbox" class="cancelMeal" data-date="${selectedDate}" data-meal="${meal}">
+                            ${selectedDate}: ${meal} 
+                        </li>`;
+                });
+                document.getElementById("cancelMeal").style.display = "block";
+            } else {
+                document.getElementById("cancelMeal").style.display = "none";
+            }
+        }
+
+        document.getElementById("bookMeal").addEventListener("click", function() {
+            let selectedDate = document.getElementById("bookingDate").value;
+            let meal = document.getElementById("meal").value;
+
+            if (!selectedDate) {
+                alert("Please select a date.");
+                return;
+            }
+
+            if (!Array.isArray(bookedMeals[selectedDate])) {
+                bookedMeals[selectedDate] = [];
+            }
+
+            if (!bookedMeals[selectedDate].includes(meal)) {
+                bookedMeals[selectedDate].push(meal);
+                localStorage.setItem("bookedMeals", JSON.stringify(bookedMeals));
+                alert(`Your ${meal} on ${selectedDate} is booked!`);
+                updateBookingHistory();
+                window.location.href = "thankyou.html"; // Redirect after booking
+            } else {
+                alert("You have already booked this meal for the selected date.");
+            }
+        });
+
+        document.getElementById("cancelMeal").addEventListener("click", function() {
+            document.querySelectorAll(".cancelMeal:checked").forEach(checkbox => {
+                let date = checkbox.dataset.date;
+                let meal = checkbox.dataset.meal;
+                bookedMeals[date] = bookedMeals[date].filter(m => m !== meal);
+                if (bookedMeals[date].length === 0) delete bookedMeals[date];
+            });
+
+            localStorage.setItem("bookedMeals", JSON.stringify(bookedMeals));
+            updateBookingHistory();
+        });
+
+        document.getElementById("meal").addEventListener("change", updateMenu);
+        document.getElementById("bookingDate").addEventListener("change", updateMenu);
+        updateBookingHistory();
+    </script>
+</body>
+</html>

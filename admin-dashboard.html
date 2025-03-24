@@ -29,22 +29,30 @@
             background: rgba(0, 0, 0, 0.8);
             padding: 20px;
             border-radius: 10px;
-            width: 80%;
+            width: 90%;
+            max-width: 800px;
             margin: auto;
             box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
             margin-bottom: 30px;
+        }
+
+        /* Table container with overflow */
+        .table-wrapper {
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            min-width: 600px;
         }
 
         th, td {
             border: 1px solid white;
             padding: 10px;
             text-align: center;
+            white-space: nowrap; /* Prevents text from wrapping */
         }
 
         th {
@@ -72,6 +80,20 @@
         .logout-btn:hover {
             background-color: #ff2a00;
         }
+
+        /* Responsive Table for Mobile */
+        @media screen and (max-width: 600px) {
+            .table-container {
+                width: 100%;
+                padding: 10px;
+            }
+            table {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -89,34 +111,38 @@
         <!-- Booking Summary Table -->
         <div class="table-container">
             <h2>🍽 Mess Booking Summary</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>🍳 Breakfast</th>
-                        <th>🍛 Lunch</th>
-                        <th>🍽 Dinner</th>
-                    </tr>
-                </thead>
-                <tbody id="bookingTableBody"></tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>🍳 Breakfast</th>
+                            <th>🍛 Lunch</th>
+                            <th>🍽 Dinner</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingTableBody"></tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Online Bookings Table -->
         <div class="table-container">
             <h2>💳 Online Bookings</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Name</th>
-                        <th>Transaction ID</th>
-                        <th>Meal</th>
-                        <th>Amount Paid</th>
-                    </tr>
-                </thead>
-                <tbody id="onlineBookingTableBody"></tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Transaction ID</th>
+                            <th>Meal</th>
+                            <th>Amount Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody id="onlineBookingTableBody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -193,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 1  // Ensures the scale increments by 1
+                        stepSize: 1
                     }
                 }
             }
