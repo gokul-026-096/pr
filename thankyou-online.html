@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Online Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f1efef;
+            margin: 0;
+            padding: 20px;
+        }
+        .home-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #f6f5f4;
+            color: rgb(16, 15, 15);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .home-btn:hover {
+            background: #e04a2b;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: rgb(231, 226, 226);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+        h2 {
+            color: #2d8a40;
+            text-align: center;
+        }
+        .bill {
+            border: 2px dashed #333;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .bill p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-btn" onclick="window.location.href='landing.html'">🏠 Home</button>
+
+    <h2>✅ Payment Successful! </h2>
+
+    <div class="container">
+        <h3>🧾 Payment Receipt</h3>
+        <div class="bill">
+            <p><strong>Name:</strong> <span id="userName">Guest</span></p>
+            <p><strong>Meal:</strong> <span id="mealName">N/A</span></p>
+            <p><strong>Transaction ID:</strong> <span id="txnId">N/A</span></p>
+            <p><strong>Amount Paid:</strong> ₹<span id="amountPaid">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Retrieve payment details from sessionStorage
+        document.getElementById("userName").innerText = sessionStorage.getItem("userName") || "Guest";
+        document.getElementById("txnId").innerText = sessionStorage.getItem("txnId") || "N/A";
+        document.getElementById("mealName").innerText = sessionStorage.getItem("meal") || "N/A";
+        document.getElementById("amountPaid").innerText = sessionStorage.getItem("mealPrice") || "0";
+    </script>
+</body>
+</html>

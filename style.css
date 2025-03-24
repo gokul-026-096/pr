@@ -1,0 +1,97 @@
+/* Admin Login Button - Top Right */
+.admin-login {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: #ff9800;
+    color: rgb(20, 2, 2);
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Centered Container for Forms */
+.login-container, 
+.reset-container,
+.booking-form {
+    background: rgb(49, 47, 47);
+    color: rgb(252, 249, 249);
+    max-width: 400px;
+    padding: 25px;
+    margin: 10% auto;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+/* Centering Form Elements */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+label {
+    font-weight: bold;
+    margin-top: 12px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+}
+
+input, select {
+    padding: 12px;
+    margin: 6px 0;
+    width: 90%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Centering Select Date and Book Now */
+.booking-form label,
+.booking-form input,
+.booking-form select,
+.booking-form button {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    text-align: center;
+}
+
+/* Stylish Buttons */
+button {
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Reset Password Message */
+#resetMessage {
+    margin-top: 12px;
+    font-weight: bold;
+    color: red;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 480px) {
+    .login-container, .reset-container, .booking-form {
+        max-width: 90%;
+        padding: 20px;
+    }
+}

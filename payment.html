@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .payment-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f4f4f4;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            background: #008CBA;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #005f73;
+        }
+        .qr-code {
+            margin-top: 20px;
+        }
+        input {
+            padding: 8px;
+            width: 80%;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Complete Your Payment</h2>
+        <p>Meal: <span id="mealName">Loading...</span></p>
+        <p>Amount: ₹<span id="mealPrice">0</span></p>
+
+        <!-- Google Pay / UPI QR Code -->
+        <div class="qr-code">
+            <h3>Scan & Pay via Google Pay / UPI</h3>
+            <img id="qrImage" src="" alt="QR Code will appear here" width="200" class="hidden">
+            <p id="upiDetails">UPI ID: yourupi@okicici</p>
+            <input type="number" id="qrAmount" readonly />
+            <button id="confirmQRPayment" disabled>Confirm QR Payment</button>
+        </div>
+    </div>
+
+    <script>
+        // Meal Prices
+        const mealPrices = { "Breakfast": 50, "Lunch": 70, "Dinner": 50 };
+
+        // Get stored booking details
+        const meal = sessionStorage.getItem("meal");
+        const selectedMeal = sessionStorage.getItem("selectedMeal");
+
+        // DOM elements
+        const mealNameElement = document.getElementById("mealName");
+        const mealPriceElement = document.getElementById("mealPrice");
+        const qrAmountElement = document.getElementById("qrAmount");
+        const qrImageElement = document.getElementById("qrImage");
+        const confirmQRButton = document.getElementById("confirmQRPayment");
+
+        if (meal && mealPrices.hasOwnProperty(meal)) {
+            const price = mealPrices[meal];
+
+            mealNameElement.innerText = `${meal} - ${selectedMeal}`;
+            mealPriceElement.innerText = price;
+            qrAmountElement.value = price;
+
+            const qrImagePath = (meal === "Lunch") ? "qr2.jpeg" : "qr1.jpeg";
+            qrImageElement.src = qrImagePath;
+            qrImageElement.classList.remove("hidden");
+
+            confirmQRButton.disabled = false;
+        }
+
+        confirmQRButton.addEventListener("click", function() {
+            sessionStorage.setItem("mealPrice", mealPriceElement.innerText);
+            window.location.href = "info.html";
+        });
+    </script>
+</body>
+</html>

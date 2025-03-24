@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Back to Home Link (Properly Aligned) -->
+    <div class="top-left">
+        <nav>
+            <a href="landing.html" class="back-home">🏠 Back to Home</a>
+        </nav>        
+
+    <div class="login-container">
+        <h1>🔑 Admin Login</h1>
+        
+        <form id="adminLoginForm">
+            <label for="adminId">Admin ID:</label>
+            <input type="text" id="adminId" placeholder="Enter Admin ID" required>
+
+            <label for="adminPassword">Password:</label>
+            <input type="password" id="adminPassword" placeholder="Enter Password" required>
+
+            <button type="submit">🚀 Login</button>
+            <p id="errorMessage" class="error-message"></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("adminLoginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let adminId = document.getElementById("adminId").value.trim();
+            let adminPassword = document.getElementById("adminPassword").value.trim();
+
+            if (adminId === "admin" && adminPassword === "admin123") {
+                sessionStorage.setItem("isAdminLoggedIn", "true");
+                alert("✅ Admin Login Successful!");
+                window.location.href = "admin-dashboard.html";
+            } else {
+                document.getElementById("errorMessage").innerText = "❌ Invalid Admin ID or Password!";
+            }
+        });
+
+        if (sessionStorage.getItem("isAdminLoggedIn") === "true") {
+            window.location.href = "admin-dashboard.html";
+        }
+    </script>
+
+</body>
+</html>

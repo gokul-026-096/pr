@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Booking Confirmed</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Centered Confirmation Container */
+        .confirmation-container {
+            background: rgb(49, 47, 47);
+            color: rgb(252, 249, 249);
+            max-width: 400px;
+            padding: 25px;
+            margin: 10% auto;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        /* Title and Message Styling */
+        h1 {
+            color: #a05c3c; /* Gold */
+           
+            font-size: 24px;
+        }
+
+        h2 {
+            color: #e7dede; /* Green */
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #c77f56; /* Orange */
+            font-style: italic;
+            font-size: 18px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #ddd;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: rgb(20, 2, 2);
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="confirmation-container">
+        <h1>🎉 Meal Booking Confirmed! 🎉</h1>
+        <h2>✅ Your Meal Has Been Successfully Booked</h2>
+        <p>Enjoy your delicious meal! 🍽</p>
+        <h3>"Take Only What You Need, Eat What You Take. Let's Reduce Food Waste!" ♻️</h3>
+        <button class="back-btn" onclick="window.location.href='booking.html'">🔙 Back to Booking</button>
+    </div>
+
+</body>
+</html>

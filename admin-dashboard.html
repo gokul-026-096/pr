@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #1e1e2e;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container, .table-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            margin: auto;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff5733;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+
+        .logout-btn {
+            background-color: #ff5733;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff2a00;
+        }
+    </style>
+</head>
+<body>
+    <button class="logout-btn" onclick="logoutAdmin()">🚪 Logout</button>
+
+    <div class="dashboard-container">
+        <h1>📊 Admin Dashboard</h1>
+        <p>View the number of meal bookings made by students.</p>
+
+        <!-- Booking Bar Chart -->
+        <div class="chart-container">
+            <canvas id="bookingChart"></canvas>
+        </div>
+
+        <!-- Booking Summary Table -->
+        <div class="table-container">
+            <h2>🍽 Mess Booking Summary</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>🍳 Breakfast</th>
+                        <th>🍛 Lunch</th>
+                        <th>🍽 Dinner</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Online Bookings Table -->
+        <div class="table-container">
+            <h2>💳 Online Bookings</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Transaction ID</th>
+                        <th>Meal</th>
+                        <th>Amount Paid</th>
+                    </tr>
+                </thead>
+                <tbody id="onlineBookingTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (!sessionStorage.getItem("isAdminLoggedIn")) {
+        window.location.href = "admin.html";
+    }
+
+    function logoutAdmin() {
+        sessionStorage.removeItem("isAdminLoggedIn");
+        alert("🚪 Logged out successfully!");
+        window.location.href = "admin.html";
+    }
+
+    document.querySelector(".logout-btn").addEventListener("click", logoutAdmin);
+
+    let bookingData = JSON.parse(localStorage.getItem("bookedMeals")) || {};
+    let onlineBookings = JSON.parse(localStorage.getItem("onlineBookings")) || [];
+    let mealCounts = { "Breakfast": 0, "Lunch": 0, "Dinner": 0 };
+    let dailyBookings = {};
+    let today = new Date().toISOString().split("T")[0];
+
+    // Update booked meals
+    let updatedBookingData = {};
+    for (let date in bookingData) {
+        if (date >= today) {
+            updatedBookingData[date] = bookingData[date];
+
+            let meal = bookingData[date];
+            if (mealCounts[meal] !== undefined) {
+                mealCounts[meal]++;
+            }
+            if (!dailyBookings[date]) {
+                dailyBookings[date] = { "Breakfast": 0, "Lunch": 0, "Dinner": 0 };
+            }
+            dailyBookings[date][meal]++;
+        }
+    }
+
+    localStorage.setItem("bookedMeals", JSON.stringify(updatedBookingData));
+
+    // Populate Booking Table
+    let bookingTableBody = document.getElementById("bookingTableBody");
+    bookingTableBody.innerHTML = "";
+    for (let date in dailyBookings) {
+        let row = `
+            <tr>
+                <td>${date}</td>
+                <td>${dailyBookings[date]["Breakfast"]}</td>
+                <td>${dailyBookings[date]["Lunch"]}</td>
+                <td>${dailyBookings[date]["Dinner"]}</td>
+            </tr>
+        `;
+        bookingTableBody.innerHTML += row;
+    }
+
+    // Chart for Booking Data
+    let ctx = document.getElementById("bookingChart").getContext("2d");
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: Object.keys(mealCounts),
+            datasets: [{
+                label: "Total Bookings",
+                data: Object.values(mealCounts),
+                backgroundColor: ["#ffcc00", "#ff5733", "#33ff57"],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1  // Ensures the scale increments by 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Populate Online Booking Table
+    let onlineBookingTableBody = document.getElementById("onlineBookingTableBody");
+    onlineBookingTableBody.innerHTML = "";
+    onlineBookings.forEach(booking => {
+        let row = `
+            <tr>
+                <td>${booking.date}</td>
+                <td>${booking.name}</td>
+                <td>${booking.transactionId}</td>
+                <td>${booking.meal}</td>
+                <td>₹${booking.amount}</td>
+            </tr>
+        `;
+        onlineBookingTableBody.innerHTML += row;
+    });
+});
+    </script>
+</body>
+</html>

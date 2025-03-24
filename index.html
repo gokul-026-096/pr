@@ -1,0 +1,73 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Ensure a test user exists if none found in localStorage
+            let users = JSON.parse(localStorage.getItem("users")) || {};
+            if (Object.keys(users).length === 0) {
+                users["123456"] = "password123"; // Default test user
+                localStorage.setItem("users", JSON.stringify(users));
+            }
+
+            // Handle Login
+            document.getElementById("loginForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                
+                let regNo = document.getElementById("regNo").value.trim();
+                let password = document.getElementById("password").value.trim();
+                
+                if (users[regNo] && users[regNo] === password) {
+                    sessionStorage.setItem("regNo", regNo);
+                    window.location.href = "booking.html"; // Redirect after login
+                } else {
+                    document.getElementById("loginMessage").innerText = "❌ Invalid Register Number or Password!";
+                }
+            });
+        });
+    </script>
+    <style>
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        nav a {
+            color: rgb(6, 1, 1);
+            text-decoration: none;
+            font-size: 18px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Home (Landing Page) -->
+    <nav>
+        <a href="landing.html">🏠 Back to Home</a>
+    </nav>
+
+    <div class="login-container">
+        <h1>🔑 Login</h1>
+        <form id="loginForm">
+            <label for="regNo">Register Number:</label>
+            <input type="text" id="regNo" required placeholder="Enter Register Number">
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" required placeholder="Enter Password">
+
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- New user link to Reset Page -->
+        <p><a href="reset.html" style="color: white; text-decoration: underline;">New user? Click here</a></p>
+
+        <p id="loginMessage" style="color: red;"></p>
+    </div>
+</body>
+</html>

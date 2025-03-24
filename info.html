@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Payment Details</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #eef2f3;
+            padding: 20px;
+        }
+        .info-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        input {
+            padding: 10px;
+            width: 90%;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #008CBA;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #005f73;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-container">
+        <h2>Enter Payment Details</h2>
+        <input type="text" id="name" placeholder="Your Name" required />
+        <input type="text" id="transactionId" placeholder="Transaction ID" required />
+        <button id="submitInfo">Submit</button>
+    </div>
+
+    <script>
+        document.getElementById("submitInfo").addEventListener("click", function () {
+            const name = document.getElementById("name").value.trim();
+            const transactionId = document.getElementById("transactionId").value.trim();
+            const meal = sessionStorage.getItem("meal") || "N/A";
+            const amount = sessionStorage.getItem("mealPrice") || "0";
+            const date = new Date().toISOString().split("T")[0]; // Today's Date
+
+            if (!name || !transactionId) {
+                alert("⚠️ Please enter both Name and Transaction ID.");
+                return;
+            }
+
+            // Store data for thankyou-online.html
+            sessionStorage.setItem("userName", name);
+            sessionStorage.setItem("txnId", transactionId);
+
+            // Store in localStorage for admin dashboard
+            let onlineBookings = JSON.parse(localStorage.getItem("onlineBookings")) || [];
+            onlineBookings.push({ name, transactionId, meal, amount, date });
+            localStorage.setItem("onlineBookings", JSON.stringify(onlineBookings));
+
+            // Redirect to Thank You Page
+            window.location.href = "thankyou-online.html";
+        });
+    </script>
+</body>
+</html>
