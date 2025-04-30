@@ -71,10 +71,11 @@
         return;
       }
 
-      const bookingDate = localStorage.getItem("bookedDate") || localStorage.getItem("mealDate");
-      const meal = localStorage.getItem("meal");
+      // Get data from localStorage
+      const bookingDate = localStorage.getItem("mealDate") || localStorage.getItem("bookedDate") || new Date().toISOString().split("T")[0];
+      const meal = localStorage.getItem("meal") || "N/A";
       const selectedMeal = localStorage.getItem("selectedMeal") || "Standard";
-      const bookingAmount = localStorage.getItem("bookingAmount") || localStorage.getItem("mealAmount");
+      const bookingAmount = localStorage.getItem("bookingAmount") || localStorage.getItem("mealAmount") || "0";
 
       const bookingInfo = {
         name: name,

@@ -72,26 +72,16 @@
     const latest = bookings[bookings.length - 1];
 
     if (latest) {
-      const meal = latest.meal || "";
-      let amount = 0;
-
-      if (meal.toLowerCase() === "breakfast" || meal.toLowerCase() === "dinner") {
-        amount = 50;
-      } else if (meal.toLowerCase() === "lunch") {
-        amount = 70;
-      }
-
-      // Update fields
       document.getElementById("userName").innerText = latest.name || "Guest";
       document.getElementById("txnId").innerText = latest.transactionId || latest.txnId || "N/A";
-      document.getElementById("mealName").innerText = `${meal} - ${latest.selectedMeal || ""}`;
-      document.getElementById("amountPaid").innerText = amount;
       document.getElementById("bookingDate").innerText = latest.date || "--";
 
-      // Update amount in localStorage for consistency
-      latest.amount = amount;
-      bookings[bookings.length - 1] = latest;
-      localStorage.setItem("onlineBookings", JSON.stringify(bookings));
+      const mealType = latest.meal || "Meal";
+      const selected = latest.selectedMeal || "Standard";
+      document.getElementById("mealName").innerText = `${mealType} - ${selected}`;
+
+      const paid = latest.amount || "0";
+      document.getElementById("amountPaid").innerText = paid;
     }
   </script>
 </body>
