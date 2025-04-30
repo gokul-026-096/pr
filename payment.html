@@ -76,34 +76,30 @@
     const bookingDate = sessionStorage.getItem("bookingDate") || new Date().toISOString().split("T")[0];
     const amount = sessionStorage.getItem("amount") || 0;
 
-    const mealNameElement = document.getElementById("mealName");
-    const mealPriceElement = document.getElementById("mealPrice");
-    const qrAmountElement = document.getElementById("qrAmount");
-    const qrImageElement = document.getElementById("qrImage");
-    const confirmQRButton = document.getElementById("confirmQRPayment");
-    const bookingDateElement = document.getElementById("bookingDate");
-
-    if (!meal || !amount) {
-      alert("Missing meal details. Please go back and book again.");
-    }
+    // Save to localStorage so info.html and thankyou-online.html can access it
+    localStorage.setItem("meal", meal);
+    localStorage.setItem("selectedMeal", selectedMeal);
+    localStorage.setItem("mealDate", bookingDate);
+    localStorage.setItem("mealAmount", amount);
 
     // Display content
-    mealNameElement.innerText = `${meal} - ${selectedMeal}`;
-    mealPriceElement.innerText = amount;
-    qrAmountElement.value = amount;
-    bookingDateElement.innerText = bookingDate;
+    document.getElementById("mealName").innerText = `${meal} - ${selectedMeal}`;
+    document.getElementById("mealPrice").innerText = amount;
+    document.getElementById("qrAmount").value = amount;
+    document.getElementById("bookingDate").innerText = bookingDate;
 
-    // Show QR image based on amount
+    // QR image logic
+    const qrImage = document.getElementById("qrImage");
     if (parseInt(amount) === 70) {
-      qrImageElement.src = "qr2.jpeg";
+      qrImage.src = "qr2.jpeg";
     } else {
-      qrImageElement.src = "qr1.jpeg";
+      qrImage.src = "qr1.jpeg";
     }
-    qrImageElement.classList.remove("hidden");
-    confirmQRButton.disabled = false;
 
-    // Confirm QR Payment
-    confirmQRButton.addEventListener("click", () => {
+    qrImage.classList.remove("hidden");
+    document.getElementById("confirmQRPayment").disabled = false;
+
+    document.getElementById("confirmQRPayment").addEventListener("click", () => {
       sessionStorage.setItem("paymentConfirmed", "true");
       window.location.href = "info.html";
     });
