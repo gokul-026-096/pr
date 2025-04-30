@@ -1,81 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enter Payment Details</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #eef2f3;
-            padding: 20px;
-        }
-        .info-container {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border-radius: 10px;
-            background: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        input {
-            padding: 10px;
-            width: 90%;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
-            background: #008CBA;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #005f73;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enter Payment Info</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #f0f0f0;
+    }
+
+    .info-container {
+      max-width: 400px;
+      margin: auto;
+      padding: 25px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      display: block;
+      margin: 12px auto;
+      padding: 12px;
+      width: 85%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
 </head>
 <body>
-    <div class="info-container">
-        <h2>Enter Payment Details</h2>
-        <input type="text" id="name" placeholder="Your Name" required />
-        <input type="text" id="transactionId" placeholder="Transaction ID" required />
-        <button id="submitInfo">Submit</button>
-    </div>
 
-    <script>
-        document.getElementById("submitInfo").addEventListener("click", function () {
-            const name = document.getElementById("name").value.trim();
-            const transactionId = document.getElementById("transactionId").value.trim();
-            const meal = sessionStorage.getItem("meal") || "N/A";
-            const amount = sessionStorage.getItem("mealPrice") || "0";
-            const date = new Date().toISOString().split("T")[0]; // Today's Date
+  <div class="info-container">
+    <h2>Enter Payment Details</h2>
+    <input type="text" id="name" placeholder="Your Name" required />
+    <input type="text" id="txnId" placeholder="Transaction ID" required />
+    <button id="submitInfo">Submit</button>
+  </div>
 
-            if (!name || !transactionId) {
-                alert("⚠️ Please enter both Name and Transaction ID.");
-                return;
-            }
+  <script>
+    document.getElementById("submitInfo").addEventListener("click", function () {
+      const name = document.getElementById("name").value.trim();
+      const txnId = document.getElementById("txnId").value.trim();
 
-            // Store data for thankyou-online.html
-            sessionStorage.setItem("userName", name);
-            sessionStorage.setItem("txnId", transactionId);
+      if (!name || !txnId) {
+        alert("Please fill in all fields.");
+        return;
+      }
 
-            // Store in localStorage for admin dashboard
-            let onlineBookings = JSON.parse(localStorage.getItem("onlineBookings")) || [];
-            onlineBookings.push({ name, transactionId, meal, amount, date });
-            localStorage.setItem("onlineBookings", JSON.stringify(onlineBookings));
+      const bookingDate = localStorage.getItem("bookedDate") || localStorage.getItem("mealDate");
+      const meal = localStorage.getItem("meal");
+      const selectedMeal = localStorage.getItem("selectedMeal") || "Standard";
+      const bookingAmount = localStorage.getItem("bookingAmount") || localStorage.getItem("mealAmount");
 
-            // Redirect to Thank You Page
-            window.location.href = "thankyou-online.html";
-        });
-    </script>
+      const bookingInfo = {
+        name: name,
+        transactionId: txnId,
+        date: bookingDate,
+        meal: meal,
+        selectedMeal: selectedMeal,
+        amount: bookingAmount
+      };
+
+      // Save to onlineBookings array
+      let allBookings = JSON.parse(localStorage.getItem("onlineBookings") || "[]");
+      allBookings.push(bookingInfo);
+      localStorage.setItem("onlineBookings", JSON.stringify(allBookings));
+
+      // Save meal to bookedMeals by date
+      let bookedMeals = JSON.parse(localStorage.getItem("bookedMeals") || "{}");
+      if (!bookedMeals[bookingDate]) {
+        bookedMeals[bookingDate] = [];
+      }
+      bookedMeals[bookingDate].push(meal);
+      localStorage.setItem("bookedMeals", JSON.stringify(bookedMeals));
+
+      // Redirect to thank you page
+      window.location.href = "thankyou-online.html";
+    });
+  </script>
+
 </body>
 </html>

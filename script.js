@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Ensure the landing page is the first page to open
     if (!sessionStorage.getItem("visited")) {
         sessionStorage.setItem("visited", "true");
-        window.location.href = "landing.html";
+        window.location.href = "index.html";
     }
 
     // Landing Page Redirections
     let userLoginBtn = document.getElementById("userLoginBtn");
     if (userLoginBtn) {
         userLoginBtn.addEventListener("click", function () {
-            window.location.href = "index.html";
+            window.location.href = "landing.html";
         });
     }
 
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let loginBtn = document.getElementById("loginBtn");
     if (loginBtn) {
         loginBtn.addEventListener("click", function () {
-            window.location.href = "index.html";
+            window.location.href = "landing.html";
         });
     }
 

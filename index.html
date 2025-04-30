@@ -1,73 +1,57 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Welcome</title>
     <link rel="stylesheet" href="style.css">
-    <script defer>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Ensure a test user exists if none found in localStorage
-            let users = JSON.parse(localStorage.getItem("users")) || {};
-            if (Object.keys(users).length === 0) {
-                users["123456"] = "password123"; // Default test user
-                localStorage.setItem("users", JSON.stringify(users));
-            }
-
-            // Handle Login
-            document.getElementById("loginForm").addEventListener("submit", function (event) {
-                event.preventDefault();
-                
-                let regNo = document.getElementById("regNo").value.trim();
-                let password = document.getElementById("password").value.trim();
-                
-                if (users[regNo] && users[regNo] === password) {
-                    sessionStorage.setItem("regNo", regNo);
-                    window.location.href = "booking.html"; // Redirect after login
-                } else {
-                    document.getElementById("loginMessage").innerText = "❌ Invalid Register Number or Password!";
-                }
-            });
-        });
-    </script>
-    <style>
-        nav {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-        nav a {
-            color: rgb(6, 1, 1);
-            text-decoration: none;
-            font-size: 18px;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
-    <!-- Back to Home (Landing Page) -->
-    <nav>
-        <a href="landing.html">🏠 Back to Home</a>
-    </nav>
-
     <div class="login-container">
-        <h1>🔑 Login</h1>
-        <form id="loginForm">
-            <label for="regNo">Register Number:</label>
-            <input type="text" id="regNo" required placeholder="Enter Register Number">
+        <h1>Welcome</h1>
+        <p>Select an option to continue:</p>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" required placeholder="Enter Password">
-
-            <button type="submit">Login</button>
-        </form>
-
-        <!-- New user link to Reset Page -->
-        <p><a href="reset.html" style="color: white; text-decoration: underline;">New user? Click here</a></p>
-
-        <p id="loginMessage" style="color: red;"></p>
+        <button id="userLoginBtn">👤 User Login</button>
+        <button id="adminLoginBtn">🔑 Admin Login</button>
+        <button id="onlineBookingBtn">📅 Online Booking</button> <!-- New Button -->
     </div>
+
+    <script>
+        // Redirect when buttons are clicked
+        document.getElementById("userLoginBtn").addEventListener("click", function() {
+            window.location.href = "landing.html";
+        });
+
+        document.getElementById("adminLoginBtn").addEventListener("click", function() {
+            window.location.href = "admin.html";
+        });
+
+        document.getElementById("onlineBookingBtn").addEventListener("click", function() {
+            window.location.href = "onlinebooking.html"; // Redirect to Online Booking Page
+        });
+    </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyBcJ-YirjARwHlRELMhcaXQUnEys6Y12WI",
+          authDomain: "mynexmeal.firebaseapp.com",
+          projectId: "mynexmeal",
+          storageBucket: "mynexmeal.firebasestorage.app",
+          messagingSenderId: "141015488542",
+          appId: "1:141015488542:web:8ab005e3e87d270675f60f",
+          measurementId: "G-N91RR9Z4K2"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>
 </body>
 </html>

@@ -1,123 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Booking</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Online Booking</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-        <h1>🍽 Online Meal Booking 🍽</h1>
-        <nav>
-            <ul>
-                <li><a href="landing.html">🏠 Home</a></li>
-            </ul>
-        </nav>
-    </header>
+  <header>
+    <h1>🍽 Online Meal Booking 🍽</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">🏠 Home</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <section class="booking-form">
-        <h2>📅 Book Your Meal</h2>
-        <p>Welcome, Guest! 🎉</p>
+  <section class="booking-form">
+    <h2>📅 Book Your Meal</h2>
+    <p>Welcome, Guest! 🎉</p>
 
-        <label for="bookingDate">Select Date:</label>
-        <input type="date" id="bookingDate">
+    <label for="bookingDate">Select Date:</label>
+    <input type="date" id="bookingDate" />
 
-        <label for="meal">Select Meal:</label>
-        <select id="meal">
-            <option value="Breakfast">🥞 Breakfast</option>
-            <option value="Lunch">🍛 Lunch</option>
-            <option value="Dinner">🍽 Dinner</option>
-        </select>
+    <label for="meal">Select Meal:</label>
+    <select id="meal">
+      <option value="Breakfast">🥞 Breakfast</option>
+      <option value="Lunch">🍛 Lunch</option>
+      <option value="Dinner">🍽 Dinner</option>
+    </select>
 
-        <h3>🍽 Today's Menu</h3>
-        <ul id="foodMenu"><li>Loading...</li></ul>
+    <h3>🍽 Today's Menu</h3>
+    <ul id="foodMenu"><li>Loading...</li></ul>
 
-        <h3>⏰ Dining Time:</h3>
-        <p id="diningTime">Select a meal to view dining time</p>
+    <h3>⏰ Dining Time:</h3>
+    <p id="diningTime">Select a meal to view dining time</p>
 
-        <h3>⏳ Booking Closes In:</h3>
-        <p id="countdown">Checking...</p>
+    <h3>⏳ Booking Closes In:</h3>
+    <p id="countdown">Checking...</p>
 
-        <button id="bookMeal">✅ Book Now</button>
-    </section>
+    <button id="bookMeal">✅ Book Now</button>
+  </section>
 
-    <script>
-        const mealTimings = {
-            "Breakfast": { time: "7:30 AM - 9:00 AM", close: "05:00" },
-            "Lunch": { time: "12:30 PM - 2:00 PM", close: "10:00" },
-            "Dinner": { time: "7:30 PM - 9:00 PM", close: "17:00" }
-        };
+  <script>
+    const mealTimings = {
+      "Breakfast": { time: "7:30 AM - 9:00 AM", close: "05:00" },
+      "Lunch": { time: "12:30 PM - 2:00 PM", close: "10:00" },
+      "Dinner": { time: "7:30 PM - 9:00 PM", close: "17:00" }
+    };
 
-        const weeklyMenu = {
-            0: { "Breakfast": "Pancakes & Juice", "Lunch": "Rice & Dal", "Dinner": "Chapati & Sabzi" },
-            1: { "Breakfast": "Idli & Sambar", "Lunch": "Rajma & Rice", "Dinner": "Paratha & Curd" },
-            2: { "Breakfast": "Poha & Tea", "Lunch": "Aloo Gobi & Rice", "Dinner": "Paneer Butter Masala & Roti" },
-            3: { "Breakfast": "Bread Butter & Coffee", "Lunch": "Chole Bhature", "Dinner": "Dosa & Chutney" },
-            4: { "Breakfast": "Dhokla & Chutney", "Lunch": "Veg Pulao & Raita", "Dinner": "Dal Tadka & Rice" },
-            5: { "Breakfast": "Upma & Coconut Chutney", "Lunch": "Sambar Rice", "Dinner": "Veg Biryani & Raita" },
-            6: { "Breakfast": "Cornflakes & Milk", "Lunch": "Mix Veg Curry & Rice", "Dinner": "Gobi Manchurian & Fried Rice" }
-        };
+    const mealPrices = {
+      "Breakfast": 50,
+      "Lunch": 70,
+      "Dinner": 50
+    };
 
-        function updateMenu() {
-            let selectedDate = document.getElementById("bookingDate").value;
-            if (!selectedDate) return;
+    const weeklyMenu = {
+      0: { "Breakfast": "Pancakes & Juice", "Lunch": "Rice & Dal", "Dinner": "Chapati & Sabzi" },
+      1: { "Breakfast": "Idli & Sambar", "Lunch": "Rajma & Rice", "Dinner": "Paratha & Curd" },
+      2: { "Breakfast": "Poha & Tea", "Lunch": "Aloo Gobi & Rice", "Dinner": "Paneer Butter Masala & Roti" },
+      3: { "Breakfast": "Bread Butter & Coffee", "Lunch": "Chole Bhature", "Dinner": "Dosa & Chutney" },
+      4: { "Breakfast": "Dhokla & Chutney", "Lunch": "Veg Pulao & Raita", "Dinner": "Dal Tadka & Rice" },
+      5: { "Breakfast": "Upma & Coconut Chutney", "Lunch": "Sambar Rice", "Dinner": "Veg Biryani & Raita" },
+      6: { "Breakfast": "Cornflakes & Milk", "Lunch": "Mix Veg Curry & Rice", "Dinner": "Gobi Manchurian & Fried Rice" }
+    };
 
-            let day = new Date(selectedDate).getDay();
-            let meal = document.getElementById("meal").value;
-            document.getElementById("foodMenu").innerHTML = `<li>${weeklyMenu[day][meal]}</li>`;
-            updateDiningTime();
-            updateCountdown();
-        }
+    function clearPastBookings() {
+      const today = new Date().toISOString().split("T")[0];
+      let bookings = JSON.parse(localStorage.getItem("onlineBookings")) || [];
+      let updatedBookings = bookings.filter(booking => booking.bookingDate >= today);
+      localStorage.setItem("onlineBookings", JSON.stringify(updatedBookings));
+    }
 
-        function updateDiningTime() {
-            let meal = document.getElementById("meal").value;
-            document.getElementById("diningTime").innerText = `🕒 ${mealTimings[meal].time}`;
-        }
+    function updateMenu() {
+      let selectedDate = document.getElementById("bookingDate").value;
+      if (!selectedDate) return;
 
-        function updateCountdown() {
-            let meal = document.getElementById("meal").value;
-            let selectedDate = document.getElementById("bookingDate").value;
-            if (!selectedDate) return;
+      let day = new Date(selectedDate).getDay();
+      let meal = document.getElementById("meal").value;
+      document.getElementById("foodMenu").innerHTML = `<li>${weeklyMenu[day][meal]}</li>`;
+      updateDiningTime();
+      updateCountdown();
+    }
 
-            let deadline = new Date(selectedDate);
-            let closeTime = mealTimings[meal].close.split(":");
-            deadline.setHours(parseInt(closeTime[0]), parseInt(closeTime[1]), 0);
+    function updateDiningTime() {
+      let meal = document.getElementById("meal").value;
+      document.getElementById("diningTime").innerText = `🕒 ${mealTimings[meal].time}`;
+    }
 
-            let bookingCloseTime = new Date(deadline.getTime() - 2.5 * 60 * 60 * 1000);
-            let now = new Date();
+    function updateCountdown() {
+      let meal = document.getElementById("meal").value;
+      let selectedDate = document.getElementById("bookingDate").value;
+      if (!selectedDate) return;
 
-            let countdownElement = document.getElementById("countdown");
-            let bookButton = document.getElementById("bookMeal");
+      let deadline = new Date(selectedDate);
+      let closeTime = mealTimings[meal].close.split(":");
+      deadline.setHours(parseInt(closeTime[0]), parseInt(closeTime[1]), 0);
 
-            if (now >= bookingCloseTime) {
-                countdownElement.innerHTML = "🚫 Booking Closed!";
-                bookButton.disabled = true;
-                bookButton.style.background = "#ccc";
-            } else {
-                let hours = Math.floor((bookingCloseTime - now) / (1000 * 60 * 60));
-                let minutes = Math.floor(((bookingCloseTime - now) % (1000 * 60 * 60)) / (1000 * 60));
-                countdownElement.innerHTML = `🕒 ${hours}h ${minutes}m left`;
-                bookButton.disabled = false;
-            }
-        }
+      let bookingCloseTime = new Date(deadline.getTime() - 2.5 * 60 * 60 * 1000);
+      let now = new Date();
 
-        document.getElementById("meal").addEventListener("change", updateMenu);
-        document.getElementById("bookingDate").addEventListener("change", updateMenu);
+      let countdownElement = document.getElementById("countdown");
+      let bookButton = document.getElementById("bookMeal");
 
-        document.getElementById("bookMeal").addEventListener("click", function() {
-            let bookingDate = document.getElementById("bookingDate").value;
-            let meal = document.getElementById("meal").value;
-            let selectedMeal = document.getElementById("foodMenu").innerText;
+      if (now >= bookingCloseTime) {
+        countdownElement.innerHTML = "🚫 Booking Closed!";
+        bookButton.disabled = true;
+        bookButton.style.background = "#ccc";
+      } else {
+        let hours = Math.floor((bookingCloseTime - now) / (1000 * 60 * 60));
+        let minutes = Math.floor(((bookingCloseTime - now) % (1000 * 60 * 60)) / (1000 * 60));
+        countdownElement.innerHTML = `🕒 ${hours}h ${minutes}m left`;
+        bookButton.disabled = false;
+      }
+    }
 
-            // Store booking details in sessionStorage
-            sessionStorage.setItem("bookingDate", bookingDate);
-            sessionStorage.setItem("meal", meal);
-            sessionStorage.setItem("selectedMeal", selectedMeal);
+    document.getElementById("meal").addEventListener("change", updateMenu);
+    document.getElementById("bookingDate").addEventListener("change", updateMenu);
 
-            // Redirect to payment page
-            window.location.href = "payment.html";
-        });
-    </script>
+    document.getElementById("bookMeal").addEventListener("click", function () {
+      let bookingDate = document.getElementById("bookingDate").value;
+      let meal = document.getElementById("meal").value;
+      let selectedMeal = document.getElementById("foodMenu").innerText;
+      let amount = mealPrices[meal];
+
+      clearPastBookings();
+
+      // Store selected info in sessionStorage
+      sessionStorage.setItem("bookingDate", bookingDate);
+      sessionStorage.setItem("meal", meal);
+      sessionStorage.setItem("selectedMeal", selectedMeal);
+      sessionStorage.setItem("amount", amount);
+
+      // Go to payment page
+      window.location.href = "payment.html";
+    });
+
+    clearPastBookings();
+  </script>
 </body>
 </html>
